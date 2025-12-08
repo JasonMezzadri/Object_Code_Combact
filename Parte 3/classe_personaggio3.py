@@ -1,5 +1,3 @@
-
-
 from classe_arma3 import Arma
 from classe_pozione3 import Pozione
 
@@ -32,11 +30,6 @@ class Personaggio:
     def vita(self):
         return self.__vita
 
-    @vita.setter
-    def vita(self, valore):
-        # # dopo aver impostato → chiama __limita_vita()
-        pass
-
     @property
     def vita_massima(self):
         return self.__vita_massima
@@ -48,22 +41,12 @@ class Personaggio:
     def forza(self):
         return self.__forza
 
-    @forza.setter
-    def forza(self, valore):
-        # # valida range 1–20
-        pass
-
     # ===========================
     # PROPERTY destrezza
     # ===========================
     @property
     def destrezza(self):
         return self.__destrezza
-
-    @destrezza.setter
-    def destrezza(self, valore):
-        # # valida range 1–20
-        pass
 
     # ===========================
     # PROPERTY arma
@@ -73,9 +56,13 @@ class Personaggio:
         return self.__arma
 
     @arma.setter
-    def arma(self, valore):
-        # # deve essere None oppure Arma
-        pass
+    def arma(self, nuova_arma):
+        if nuova_arma is not None and not isinstance(nuova_arma, Arma):
+            raise TypeError("L'arma deve essere None oppure un'istanza di arma")
+        else:
+            self.__arma = nuova_arma
+
+        
 
     # ===========================
     # NUOVE PROPERTY Parte 3
