@@ -4,7 +4,7 @@ class Pozione:
         if nome == "":
             raise ValueError("Il nome non può essere vuoto")
 
-        if effetto not in ["cura", "potenzia_forza", "potenzia_destrezza"]:
+        if effetto not in ["cura", "buff_forza", "buff_destrezza"]:
             raise ValueError("Valore dell'effetto non ammesso")
         
         if quantita < 1:
@@ -48,22 +48,26 @@ class Pozione:
 
     def applica_a(self, giocatore):
         """
-        Applica l’effetto della pozione al bersaglio.
+        Applica l'effetto della pozione al bersaglio.
         Restituisce un dizionario di log, es:
         {"effetto": "cura", "quantita": 10, "durata": 0}
         """
         if self.__effetto == 'cura':
             if hasattr(giocatore, 'applica_cura') and callable(getattr(giocatore, 'applica_cura')):
-                giocatore.applica_cura(self.quantita)
+                giocatore.applica_cura(self.__quantita)
                 self.__consumata = True
+                return {"effetto": "cura", "quantita": self.__quantita}
             else:
-                ValueError("L'attributo 'applica_cura' non è definito")
+                return {"errore": "metodo_applica_cura_non_trovato"}
         else:
-            if hasattr(giocatore, 'applica_buff') and callable(getattr(giocatore, 'applica_buff')):
-                giocatore.applica_buff(self.quantita)
+            if hasattr(giocatore, 'aggiungi_buff') and callable(getattr(giocatore, 'aggiungi_buff')):
+                # Per i buff, determina il tipo
+                stat = "forza" if self.__effetto == "buff_forza" else "destrezza"
+                giocatore.aggiungi_buff(stat, self.__quantita, self.__durata)
                 self.__consumata = True
+                return {"effetto": self.__effetto, "quantita": self.__quantita, "durata": self.__durata}
             else:
-                ValueError("L'attributo 'applica_cura' non è definito")
+                return {"errore": "metodo_aggiungi_buff_non_trovato"}
 
         
     def __str__(self):
